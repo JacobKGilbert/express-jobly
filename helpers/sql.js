@@ -20,4 +20,34 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
   };
 }
 
-module.exports = { sqlForPartialUpdate };
+/** Given filterData return formatted string for WHERE statement in SQL query */
+function sqlForFilter(filterData) {
+  if (filterData['minEmployees'] && filterData['maxEmployees']) {
+    if (filterData['maxEmployees'] < filterData['minEmployees']) {
+      throw new BadRequestError('Max employees must be greater than Min employees')
+    }
+  }
+  // {name: 'Comp', minEmployees: 32, maxEmployees: 50} =>
+  // ['"name" LIKE "%$1%"', '"num_employees"<=$2', '"num_employees">=$3']
+  const keys = Object.keys(filterData)
+  const cols = keys.map((colName, idx) => {
+    if (colName === 'minEmployees' || colName === 'maxEmployees') {
+      if (colName === 'minEmployees') {
+        return `"num_employees"<=$${idx + 1}`
+      } else if (colName === 'maxEmployees') {
+        return `"num_employees">=$${idx + 1}`
+      }
+    } else {
+      return `"${colName}" LIKE "%$${idx + 1}%"`
+    }
+  })
+
+  return {
+    // whereCriteria: 
+    // '"name" LIKE "%$1%" AND "num_employees"<=$2 AND "num_employees">=$3'
+    whereCriteria: cols.join(' AND '),
+    values: Object.values(filterData),
+  }
+}
+
+module.exports = { sqlForPartialUpdate, sqlForFilter };
