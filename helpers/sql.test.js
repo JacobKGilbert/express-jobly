@@ -20,7 +20,7 @@ describe('Tests for sqlForFilter', () => {
 
     expect(result).toEqual({
       whereCriteria:
-        '"name" LIKE "%$1%" AND "num_employees"<=$2 AND "num_employees">=$3',
+        `upper(name) LIKE upper('%' || $1 || '%') AND "num_employees">=$2 AND "num_employees"<=$3`,
       values: ['Comp', 32, 50],
     })
   })
@@ -31,7 +31,7 @@ describe('Tests for sqlForFilter', () => {
 
     expect(result).toEqual({
       whereCriteria:
-        '"name" LIKE "%$1%" AND "num_employees"<=$2',
+        `upper(name) LIKE upper('%' || $1 || '%') AND "num_employees">=$2`,
       values: ['Comp', 32],
     })
   })
@@ -41,7 +41,7 @@ describe('Tests for sqlForFilter', () => {
     const result = sqlForFilter(data)
 
     expect(result).toEqual({
-      whereCriteria: '"name" LIKE "%$1%"',
+      whereCriteria: `upper(name) LIKE upper('%' || $1 || '%')`,
       values: ['Comp'],
     })
   })
