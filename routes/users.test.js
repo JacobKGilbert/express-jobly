@@ -28,7 +28,7 @@ describe("POST /users", function () {
         .send({
           username: "u-new",
           firstName: "First-new",
-          lastName: "Last-newL",
+          lastName: "Last-new",
           password: "password-new",
           email: "new@email.com",
           isAdmin: false,
@@ -39,7 +39,7 @@ describe("POST /users", function () {
       user: {
         username: "u-new",
         firstName: "First-new",
-        lastName: "Last-newL",
+        lastName: "Last-new",
         email: "new@email.com",
         isAdmin: false,
       }, token: expect.any(String),
@@ -52,7 +52,7 @@ describe("POST /users", function () {
         .send({
           username: "u-new",
           firstName: "First-new",
-          lastName: "Last-newL",
+          lastName: "Last-new",
           password: "password-new",
           email: "new@email.com",
           isAdmin: true,
@@ -63,7 +63,7 @@ describe("POST /users", function () {
       user: {
         username: "u-new",
         firstName: "First-new",
-        lastName: "Last-newL",
+        lastName: "Last-new",
         email: "new@email.com",
         isAdmin: true,
       }, token: expect.any(String),
@@ -76,7 +76,7 @@ describe("POST /users", function () {
         .send({
           username: "u-new",
           firstName: "First-new",
-          lastName: "Last-newL",
+          lastName: "Last-new",
           password: "password-new",
           email: "new@email.com",
           isAdmin: true,
@@ -100,7 +100,7 @@ describe("POST /users", function () {
         .send({
           username: "u-new",
           firstName: "First-new",
-          lastName: "Last-newL",
+          lastName: "Last-new",
           password: "password-new",
           email: "not-an-email",
           isAdmin: true,
