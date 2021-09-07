@@ -42,8 +42,25 @@ function ensureLoggedIn(req, res, next) {
   }
 }
 
+/** Middleware: Requires user to be admin or the correct current user. Checks admin first. If not, checks current user. If not, throws Unauth error. */
+
+function ensureIsAdminOrCurrentUser(req, res, next) {
+  try {
+    if (res.locals.user.isAdmin) {
+      return next();
+    } else if (res.locals.user.username === req.params.username) {
+      return next()
+    } else {
+      throw new UnauthorizedError()
+    }
+  } catch (err) {
+    err = new UnauthorizedError()
+    return next(err);
+  }
+}
 
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
+  ensureIsAdminOrCurrentUser
 };
