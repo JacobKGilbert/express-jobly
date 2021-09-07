@@ -22,6 +22,7 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 
 /** Given filterData return formatted string for WHERE statement in SQL query */
 function sqlForFilter(filterData) {
+  // Checks for both min and max employees and then checks that max is not less than min. If so, throws error.
   if (filterData['minEmployees'] && filterData['maxEmployees']) {
     if (filterData['maxEmployees'] < filterData['minEmployees']) {
       throw new BadRequestError('Max employees must be greater than Min employees')
@@ -33,12 +34,12 @@ function sqlForFilter(filterData) {
   const cols = keys.map((colName, idx) => {
     if (colName === 'minEmployees' || colName === 'maxEmployees') {
       if (colName === 'minEmployees') {
-        return `"num_employees"<=$${idx + 1}`
-      } else if (colName === 'maxEmployees') {
         return `"num_employees">=$${idx + 1}`
+      } else if (colName === 'maxEmployees') {
+        return `"num_employees"<=$${idx + 1}`
       }
     } else {
-      return `"${colName}" LIKE "%$${idx + 1}%"`
+      return `upper(${colName}) LIKE upper('%' || $${idx + 1} || '%')`
     }
   })
 
