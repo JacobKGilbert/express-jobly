@@ -2,7 +2,7 @@
 
 const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
-const { sqlForPartialUpdate } = require("../helpers/sql");
+const { sqlForPartialUpdate, sqlForFilter } = require("../helpers/sql");
 
 /** Related functions for companies. */
 
@@ -49,7 +49,27 @@ class Company {
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
-  static async findAll() {
+  static async findAll(filterData) {
+    // Verifies that filterData is defined and has keys/values and returns a query based on given filterData criteria.
+    // If not it will run a general query of all companies.
+    const isAndHasKeys = 
+          filterData !== undefined && !!Object.keys(filterData).length
+    if (isAndHasKeys) {
+      const { whereCriteria, values } = sqlForFilter(filterData)
+
+      const filtCompRes = await db.query(
+        `SELECT handle,
+                name,
+                description,
+                num_employees AS "numEmployees",
+                logo_url AS "logoUrl"
+          FROM companies
+          WHERE ${whereCriteria}
+          ORDER BY name`,
+        [...values]
+      )
+      return filtCompRes.rows
+    }
     const companiesRes = await db.query(
           `SELECT handle,
                   name,
