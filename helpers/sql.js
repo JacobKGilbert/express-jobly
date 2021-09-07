@@ -1,6 +1,9 @@
 const { BadRequestError } = require("../expressError");
 
-/** Returns the selected columns (from jsToSql) and sets to data from dataToUpdate. Formatted for an SQL query. */ 
+/** dataToUpdate (Object) provides the data to be iterated over.
+ * jsToSql (Object) provides js variable names (camel case) to be converted to sql column names (snake case).
+ * 
+ * Returns {setCols: "String of columns, separated by commas", values: [Pulled from the object values from dataToUpdate]} */ 
 
 function sqlForPartialUpdate(dataToUpdate, jsToSql) {
   const keys = Object.keys(dataToUpdate);
