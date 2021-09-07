@@ -38,7 +38,7 @@ function sqlForFilter(filterData) {
       } else if (colName === 'maxEmployees') {
         return `"num_employees"<=$${idx + 1}`
       }
-    } else {
+    } else if (colName === 'name'){
       return `upper(${colName}) LIKE upper('%' || $${idx + 1} || '%')`
     }
   })
