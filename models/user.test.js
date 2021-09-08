@@ -105,6 +105,19 @@ describe("register", function () {
   });
 });
 
+/************************************** apply */
+describe('apply', () => {
+  test('works', async () => {
+    const application = { username: 'u1', jobId: 1 }
+    const applied = await User.apply('u1', 1)
+    
+    expect(applied).toEqual(application)
+
+    const found = await db.query("SELECT * FROM applications WHERE username = 'u1'")
+    expect(found.rows.length).toEqual(1)
+  })
+})
+
 /************************************** findAll */
 
 describe("findAll", function () {
