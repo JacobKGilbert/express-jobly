@@ -122,6 +122,7 @@ describe('apply', () => {
 
 describe("findAll", function () {
   test("works", async function () {
+    await User.apply('u1', 1)
     const users = await User.findAll();
     expect(users).toEqual([
       {
@@ -130,7 +131,7 @@ describe("findAll", function () {
         lastName: "U1L",
         email: "u1@email.com",
         isAdmin: false,
-        jobs: []
+        jobs: [1]
       },
       {
         username: "u2",
