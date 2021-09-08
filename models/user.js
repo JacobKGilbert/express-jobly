@@ -116,17 +116,45 @@ class User {
    **/
 
   static async findAll() {
-    const result = await db.query(
-          `SELECT username,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  is_admin AS "isAdmin"
-           FROM users
-           ORDER BY username`,
+    const results = await db.query(
+          `SELECT u.username,
+                  u.first_name AS "firstName",
+                  u.last_name AS "lastName",
+                  u.email,
+                  u.is_admin AS "isAdmin",
+                  j.id AS "jobId"
+          FROM users AS u
+            LEFT JOIN applications AS a ON u.username = a.username
+            LEFT JOIN jobs AS j ON a.job_id = j.id
+          ORDER BY username`,
     );
+    const users = []
+    for (let i = 0; i < results.rows.length; i++) {
+      const { username, firstName, lastName, email, isAdmin, jobId } = results.rows[i]
+      // Find whether users array already has given user.
+      const found = users.find(({ username }) => username === results.rows[i].username)
+      // If not found then add, Else simply push jobId.
+      if (!found) {
+        const newUser = {
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          isAdmin: isAdmin,
+          jobs: []
+        }
+        if (jobId !== null) {
+          newUser.jobs.push(jobId)
+        }
+        users.push(newUser)
+      } else {
+        if (jobId !== null) {
+          found.jobs.push(jobId)
+        }
+      }
+    }
 
-    return result.rows;
+    return users
   }
 
   /** Given a username, return data about user.
