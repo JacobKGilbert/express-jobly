@@ -2,7 +2,7 @@
 
 const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
-const { sqlForPartialUpdate, sqlForFilter } = require("../helpers/sql");
+const { sqlForPartialUpdate, sqlCompanyFilter } = require("../helpers/sql");
 
 /** Related functions for companies. */
 
@@ -55,7 +55,7 @@ class Company {
     const isAndHasKeys = 
           filterData !== undefined && !!Object.keys(filterData).length
     if (isAndHasKeys) {
-      const { whereCriteria, values } = sqlForFilter(filterData)
+      const { whereCriteria, values } = sqlCompanyFilter(filterData)
 
       const filtCompRes = await db.query(
         `SELECT handle,

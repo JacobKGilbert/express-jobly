@@ -1,4 +1,4 @@
-const { sqlForPartialUpdate, sqlForFilter } = require('./sql')
+const { sqlForPartialUpdate, sqlCompanyFilter } = require('./sql')
 
 describe('Tests for sqlForPartialUpdate', () => {
   test('converts data to sql query', () => {
@@ -16,7 +16,7 @@ describe('Tests for sqlForPartialUpdate', () => {
 describe('Tests for sqlForFilter', () => {
   test('converts supplied data to SQL WHERE statement and values', () => {
     const data = { name: 'Comp', minEmployees: 32, maxEmployees: 50 }
-    const result = sqlForFilter(data)
+    const result = sqlCompanyFilter(data)
 
     expect(result).toEqual({
       whereCriteria:
@@ -27,7 +27,7 @@ describe('Tests for sqlForFilter', () => {
 
   test('accepts two filter parameters', () => {
     const data = { name: 'Comp', minEmployees: 32 }
-    const result = sqlForFilter(data)
+    const result = sqlCompanyFilter(data)
 
     expect(result).toEqual({
       whereCriteria:
@@ -38,7 +38,7 @@ describe('Tests for sqlForFilter', () => {
 
   test('accepts one filter parameters', () => {
     const data = { name: 'Comp' }
-    const result = sqlForFilter(data)
+    const result = sqlCompanyFilter(data)
 
     expect(result).toEqual({
       whereCriteria: `upper(name) LIKE upper('%' || $1 || '%')`,

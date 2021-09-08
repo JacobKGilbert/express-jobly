@@ -21,7 +21,7 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 }
 
 /** Given filterData return formatted string for WHERE statement in SQL query */
-function sqlForFilter(filterData) {
+function sqlCompanyFilter(filterData) {
   // Checks for both min and max employees and then checks that max is not less than min. If so, throws error.
   if (filterData['minEmployees'] && filterData['maxEmployees']) {
     if (filterData['maxEmployees'] < filterData['minEmployees']) {
@@ -51,4 +51,4 @@ function sqlForFilter(filterData) {
   }
 }
 
-module.exports = { sqlForPartialUpdate, sqlForFilter };
+module.exports = { sqlForPartialUpdate, sqlCompanyFilter };
