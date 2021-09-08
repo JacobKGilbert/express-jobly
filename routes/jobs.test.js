@@ -246,7 +246,7 @@ describe('DELETE /jobs/:id', function () {
     const resp = await request(app)
       .delete(`/jobs/${testJob.id}`)
       .set('authorization', `Bearer ${a1Token}`)
-    expect(resp.body).toEqual({ deleted: testJob.id })
+    expect(resp.body).toEqual({ deleted: `${ testJob.id }` })
   })
 
   test('fails for user', async function () {
