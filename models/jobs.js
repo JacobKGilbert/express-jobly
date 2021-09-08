@@ -150,7 +150,7 @@ class Job {
    * Throws NotFoundError if job not found.
    **/
 
-  static async remove(job) {
+  static async remove(id) {
     const result = await db.query(
       `DELETE
       FROM job
