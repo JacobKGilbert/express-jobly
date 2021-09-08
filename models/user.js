@@ -96,6 +96,20 @@ class User {
     return user;
   }
 
+  /** Allows user to apply for selected job.
+   * 
+   * Return { username, jobId }
+   */
+  static async apply(username, jobId) {
+    const result = await db.query(`
+      INSERT INTO applications (username, job_id)
+      VALUES ($1, $2)
+      RETURNING username, job_id AS "jobId"`,
+      [username, jobId]
+    )
+    return result.rows[0]
+  }
+
   /** Find all users.
    *
    * Returns [{ username, first_name, last_name, email, is_admin }, ...]
