@@ -126,7 +126,7 @@ class Job {
    */
 
   static async update(id, data) {
-    const { setCols, values } = sqlForPartialUpdate(data)
+    const { setCols, values } = sqlForPartialUpdate(data, {})
     const handleVarIdx = '$' + (values.length + 1)
 
     const querySql = `UPDATE jobs 
@@ -153,7 +153,7 @@ class Job {
   static async remove(id) {
     const result = await db.query(
       `DELETE
-      FROM job
+      FROM jobs
       WHERE id = $1
       RETURNING id`,
       [id]
