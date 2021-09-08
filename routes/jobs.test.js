@@ -12,10 +12,11 @@ const {
   commonAfterAll,
   u1Token,
   a1Token,
-  testJob
 } = require('./_testCommon')
 
-beforeAll(commonBeforeAll)
+let testJob
+
+beforeAll(async () => {testJob = await commonBeforeAll()})
 beforeEach(commonBeforeEach)
 afterEach(commonAfterEach)
 afterAll(commonAfterAll)
@@ -146,7 +147,21 @@ describe('GET /jobs', function () {
 describe('GET /jobs/:id', function () {
   test('works for anon', async function () {
     const resp = await request(app).get(`/jobs/${testJob.id}`)
-    expect(resp.body).toEqual({ job: testJob })
+    expect(resp.body).toEqual({
+      job: {
+        id: testJob.id,
+        title: testJob.title,
+        salary: testJob.salary,
+        equity: testJob.equity,
+        company: {
+          handle: 'c1',
+          name: 'C1',
+          description: 'Desc1',
+          numEmployees: 1,
+          logoUrl: 'http://c1.img',
+        },
+      },
+    })
   })
 
   test('not found for no such job', async function () {
