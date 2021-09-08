@@ -1,4 +1,4 @@
-const { sqlForPartialUpdate, sqlCompanyFilter } = require('./sql')
+const { sqlForPartialUpdate, sqlCompanyFilter, sqlJobFilter } = require('./sql')
 
 describe('Tests for sqlForPartialUpdate', () => {
   test('converts data to sql query', () => {
@@ -13,7 +13,7 @@ describe('Tests for sqlForPartialUpdate', () => {
   })
 })
 
-describe('Tests for sqlForFilter', () => {
+describe('Tests for sqlCompanyFilter', () => {
   test('converts supplied data to SQL WHERE statement and values', () => {
     const data = { name: 'Comp', minEmployees: 32, maxEmployees: 50 }
     const result = sqlCompanyFilter(data)
@@ -53,3 +53,54 @@ describe('Tests for sqlForFilter', () => {
   })
 })
 
+describe('Tests for sqlJobFilter', () => {
+  test('converts supplied data to SQL WHERE statement and values', () => {
+    const data = { title: 'Comp', minSalary: 50000, hasEquity: true }
+    const result = sqlJobFilter(data)
+
+    expect(result).toEqual({
+      whereCriteria: `upper(title) LIKE upper('%' || $1 || '%') AND "salary">=$2 AND "equity">0`,
+      values: ['Comp', 50000],
+    })
+  })
+
+  test('accepts two filter parameters', () => {
+    const data = { title: 'Comp', minSalary: 50000 }
+    const result = sqlJobFilter(data)
+
+    expect(result).toEqual({
+      whereCriteria: `upper(title) LIKE upper('%' || $1 || '%') AND "salary">=$2`,
+      values: ['Comp', 50000],
+    })
+  })
+
+  test('does not accepts hasEquity first', () => {
+    const data = { hasEquity: true, minSalary: 50000 }
+    const result = sqlJobFilter(data)
+
+    expect(result).not.toEqual({
+      whereCriteria: `"equity">0 AND "salary">=$1`,
+      values: [50000],
+    })
+  })
+
+  test('accepts one filter parameters', () => {
+    const data = { title: 'Comp' }
+    const result = sqlJobFilter(data)
+
+    expect(result).toEqual({
+      whereCriteria: `upper(title) LIKE upper('%' || $1 || '%')`,
+      values: ['Comp'],
+    })
+  })
+
+  test('accepts hasEquity as solo filter parameters', () => {
+    const data = { hasEquity: true }
+    const result = sqlJobFilter(data)
+
+    expect(result).toEqual({
+      whereCriteria: `"equity">0`,
+      values: [],
+    })
+  })
+})
