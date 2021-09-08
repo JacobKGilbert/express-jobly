@@ -8,6 +8,7 @@ const express = require("express");
 const { ensureLoggedIn, ensureIsAdminOrCurrentUser } = require("../middleware/auth");
 const { BadRequestError } = require("../expressError");
 const User = require("../models/user");
+const Job = require('../models/jobs')
 const { createToken } = require("../helpers/tokens");
 const userNewSchema = require("../schemas/userNew.json");
 const userUpdateSchema = require("../schemas/userUpdate.json");
@@ -118,5 +119,26 @@ router.delete("/:username", ensureLoggedIn, ensureIsAdminOrCurrentUser, async fu
   }
 });
 
+/** POST /[username]/jobs/[id] => { username, jobId }
+ * 
+ * If auth and job exists, add application. Else error.
+ * 
+ * Authorization required: login, isAdmin or Correct Current User
+ **/
+router.post('/:username/jobs/:id', ensureLoggedIn, ensureIsAdminOrCurrentUser,
+  async (req, res, next) => {
+    try {
+      const { username, id } = req.params
+      // Checks for user. If not, throw error.
+      await User.get(username)
+      // Checks for job. If not, throw error.
+      await Job.get(id)
+      // Adds application
+      await User.apply(username, id)
+      res.status(201).json({ applied: id })
+    } catch (err) {
+      return next(err)
+    }
+  })
 
 module.exports = router;
