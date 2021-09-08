@@ -94,12 +94,22 @@ describe('Tests for sqlJobFilter', () => {
     })
   })
 
-  test('accepts hasEquity as solo filter parameters', () => {
+  test('accepts hasEquity (true) as solo filter parameter', () => {
     const data = { hasEquity: true }
     const result = sqlJobFilter(data)
 
     expect(result).toEqual({
       whereCriteria: `"equity">0`,
+      values: [],
+    })
+  })
+
+  test('accepts hasEquity (false) as solo filter parameter', () => {
+    const data = { hasEquity: false }
+    const result = sqlJobFilter(data)
+
+    expect(result).toEqual({
+      whereCriteria: '',
       values: [],
     })
   })
