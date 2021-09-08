@@ -106,29 +106,22 @@ describe('GET /jobs', function () {
     })
   })
 
-  // test('works with filter', async () => {
-  //   const data = { name: 'C', minEmployees: 2 }
-  //   const resp = await request(app).get('/companies').send(data)
+  test('works with filter', async () => {
+    const data = { title: 'jo', minSalary: 5500 }
+    const resp = await request(app).get('/jobs').send(data)
 
-  //   expect(resp.body).toEqual({
-  //     companies: [
-  //       {
-  //         handle: 'c2',
-  //         name: 'C2',
-  //         description: 'Desc2',
-  //         numEmployees: 2,
-  //         logoUrl: 'http://c2.img',
-  //       },
-  //       {
-  //         handle: 'c3',
-  //         name: 'C3',
-  //         description: 'Desc3',
-  //         numEmployees: 3,
-  //         logoUrl: 'http://c3.img',
-  //       },
-  //     ],
-  //   })
-  // })
+    expect(resp.body).toEqual({
+      jobs: [
+        {
+          id: expect.any(Number),
+          title: 'test job',
+          salary: 10000,
+          equity: '0',
+          companyHandle: 'c1',
+        },
+      ],
+    })
+  })
 
   test('fails: test next() handler', async function () {
     // there's no normal failure event which will cause this route to fail ---
